@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Tracking Logístico</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 40px;
+        }
+        input, button {
+            margin: 5px;
+            padding: 8px;
+        }
+        .section {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Sistema de Envíos</h1>
+
+<!-- REGISTRAR ENVÍO -->
+<div class="section">
+    <h2>Registrar Envío</h2>
+
+    <h4>Operador</h4>
+    <input id="operatorId" placeholder="ID Operador" />
+
+    <h4>Remitente</h4>
+    <input id="senderNombre" placeholder="Nombre" />
+    <input id="senderDireccion" placeholder="Dirección" />
+    <input id="senderTelefono" placeholder="Teléfono" />
+
+    <h4>Destinatario</h4>
+    <input id="recNombre" placeholder="Nombre" />
+    <input id="recDireccion" placeholder="Dirección" />
+    <input id="recTelefono" placeholder="Teléfono" />
+
+    <h4>Paquete</h4>
+    <input id="peso" placeholder="Peso" />
+
+    <br><br>
+    <button onclick="registrar()">Registrar Envío</button>
+
+    <p id="resultadoRegistro"></p>
+</div>
+
+<!-- CONSULTAR ENVÍO -->
+<div class="section">
+    <h2>Consultar Envío</h2>
+
+    <input id="trackingId" placeholder="Tracking ID" />
+    <button onclick="consultar()">Consultar</button>
+
+    <pre id="resultadoConsulta"></pre>
+</div>
+
+<script>
+
+const BASE_URL = "http://localhost:8080/api/shipments";
+
+async function registrar() {
+    const data = {
+        operatorId: parseInt(document.getElementById("operatorId").value),
+        sender: {
+            nombre: document.getElementById("senderNombre").value,
+            direccion: document.getElementById("senderDireccion").value,
+            telefono: parseInt(document.getElementById("senderTelefono").value)
+        },
+        recipient: {
+            nombre: document.getElementById("recNombre").value,
+            direccion: document.getElementById("recDireccion").value,
+            telefono: parseInt(document.getElementById("recTelefono").value)
+        },
+        packageData: {
+            peso: parseFloat(document.getElementById("peso").value)
+        }
+    };
+
+    try {
+        const res = await fetch(`${BASE_URL}/register`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        document.getElementById("resultadoRegistro").innerText =
+            " Envío creado con tracking: " + result.trackingId;
+
+    } catch (err) {
+        document.getElementById("resultadoRegistro").innerText =
+            " Error: " + err;
+    }
+}
+
+async function consultar() {
+    const trackingId = document.getElementById("trackingId").value;
+
+    try {
+        const res = await fetch(`${BASE_URL}/${trackingId}`);
+        const result = await res.json();
+
+        document.getElementById("resultadoConsulta").innerText =
+            JSON.stringify(result, null, 2);
+
+    } catch (err) {
+        document.getElementById("resultadoConsulta").innerText =
+            " Error: " + err;
+    }
+}
+
+</script>
+
+</body>
+</html>
