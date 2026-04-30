@@ -23,7 +23,7 @@ public class LogisticEvent {
     @JoinColumn(name = "idoperador", nullable = false)
     private Operator operator;
 
-    @ManyToOne
+    
     @JoinColumn(name = "nombre", nullable = false)
     private String nombre;
 

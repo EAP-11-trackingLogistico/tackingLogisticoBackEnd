@@ -26,9 +26,7 @@ public class Shipment {
     @JoinColumn(name = "idpaquete", nullable = false)
     private Package paquete;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "estado", nullable = false)
-    private ShipmentStatus status;
+
 
     @Column(name = "fecharegistro", nullable = false)
     private LocalDateTime createdAt;
@@ -64,13 +62,6 @@ public class Shipment {
         this.paquete = paquete;
     }
 
-    public ShipmentStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ShipmentStatus status) {
-        this.status = status;
-    }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;

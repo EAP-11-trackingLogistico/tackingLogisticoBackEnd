@@ -8,7 +8,6 @@ public class ShipmentResponse {
     private Integer trackingId;
     private Integer operatorId;
     private Integer packageId;
-    private String status;
     private LocalDateTime createdAt;
     private String message;
 
@@ -20,7 +19,6 @@ public class ShipmentResponse {
             Integer trackingId,
             Integer operatorId,
             Integer packageId,
-            String status,
             LocalDateTime createdAt,
             String message
     ) {
@@ -28,7 +26,6 @@ public class ShipmentResponse {
         this.trackingId = trackingId;
         this.operatorId = operatorId;
         this.packageId = packageId;
-        this.status = status;
         this.createdAt = createdAt;
         this.message = message;
     }
@@ -65,13 +62,7 @@ public class ShipmentResponse {
         this.packageId = packageId;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    
 
     public LocalDateTime getCreatedAt() {
         return createdAt;

@@ -49,7 +49,7 @@ public class LogisticEventService {
         event.setEventDate(request.getEventDate());
         event.setEventType(eventType);
 
-        shipment.setStatus(eventType);
+
         shipmentRepository.save(shipment);
 
         LogisticEvent savedEvent = logisticEventRepository.save(event);
@@ -75,7 +75,6 @@ public class LogisticEventService {
 
         return new TrackingResponse(
                 shipment.getTrackingId(),
-                shipment.getStatus().name(),
                 lastLocation,
                 lastEvent != null ? lastEvent.getEventDate() : null
         );
