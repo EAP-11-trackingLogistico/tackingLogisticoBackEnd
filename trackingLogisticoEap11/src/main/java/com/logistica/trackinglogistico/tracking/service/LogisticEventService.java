@@ -49,7 +49,6 @@ public class LogisticEventService {
         event.setEventDate(request.getEventDate());
         event.setEventType(eventType);
 
-
         shipmentRepository.save(shipment);
 
         LogisticEvent savedEvent = logisticEventRepository.save(event);
@@ -64,7 +63,7 @@ public class LogisticEventService {
         );
     }
 
-    public TrackingResponse getTracking(Integer trackingId) {
+    public TrackingResponse getTracking(String trackingId) {
         Shipment shipment = shipmentRepository.findByTrackingId(trackingId)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe envío con trackingId: " + trackingId));
 

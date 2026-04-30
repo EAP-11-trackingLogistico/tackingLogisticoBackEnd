@@ -3,9 +3,12 @@ package com.logistica.trackinglogistico.tracking.model;
 import com.logistica.trackinglogistico.orders.model.Package;
 import com.logistica.trackinglogistico.users.model.Operator;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "envio")
 public class Shipment {
@@ -15,59 +18,25 @@ public class Shipment {
     @Column(name = "idenvio")
     private Integer id;
 
+    @Setter
     @Column(name = "numseguimiento", nullable = false, unique = true)
-    private Integer trackingId;
+    private String trackingId;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "idoperador", nullable = false)
     private Operator operador;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "idpaquete", nullable = false)
     private Package paquete;
 
-
-
+    @Setter
     @Column(name = "fecharegistro", nullable = false)
     private LocalDateTime createdAt;
 
     public Shipment() {
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public Integer getTrackingId() {
-        return trackingId;
-    }
-
-    public void setTrackingId(Integer trackingId) {
-        this.trackingId = trackingId;
-    }
-
-    public Operator getOperador() {
-        return operador;
-    }
-
-    public void setOperador(Operator operador) {
-        this.operador = operador;
-    }
-
-    public Package getPaquete() {
-        return paquete;
-    }
-
-    public void setPaquete(Package paquete) {
-        this.paquete = paquete;
-    }
-
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 }

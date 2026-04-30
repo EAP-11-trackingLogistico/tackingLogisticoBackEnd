@@ -2,12 +2,15 @@ package com.logistica.trackinglogistico.tracking.model;
 
 import com.logistica.trackinglogistico.users.model.Operator;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 
+@Getter
 @Entity
-@Table(name = "evento_logistico")
+@Table(name = "eventologistico")
 public class LogisticEvent {
 
     @Id
@@ -15,24 +18,30 @@ public class LogisticEvent {
     @Column(name = "idevento")
     private Integer id;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "idenvio", nullable = false)
     private Shipment shipment;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "idoperador", nullable = false)
     private Operator operator;
 
     
-    @JoinColumn(name = "nombre", nullable = false)
+    @Setter
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
+    @Setter
     @Column(name = "ubicacion", nullable = false)
     private String location;
 
+    @Setter
     @Column(name = "horaevento", nullable = false)
     private LocalDateTime eventDate;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "tipoevento", nullable = false)
     private ShipmentStatus eventType;
@@ -40,47 +49,4 @@ public class LogisticEvent {
     public LogisticEvent() {
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public Shipment getShipment() {
-        return shipment;
-    }
-
-    public void setShipment(Shipment shipment) {
-        this.shipment = shipment;
-    }
-
-    public Operator getOperator() {
-        return operator;
-    }
-
-    public void setOperator(Operator operator) {
-        this.operator = operator;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public LocalDateTime getEventDate() {
-        return eventDate;
-    }
-
-    public void setEventDate(LocalDateTime eventDate) {
-        this.eventDate = eventDate;
-    }
-
-    public ShipmentStatus getEventType() {
-        return eventType;
-    }
-
-    public void setEventType(ShipmentStatus eventType) {
-        this.eventType = eventType;
-    }
 }

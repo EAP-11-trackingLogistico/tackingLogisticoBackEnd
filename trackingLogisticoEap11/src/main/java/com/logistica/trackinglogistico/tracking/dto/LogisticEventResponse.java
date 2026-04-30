@@ -5,13 +5,13 @@ import java.time.LocalDateTime;
 public class LogisticEventResponse {
 
     private Integer id;
-    private Integer trackingId;
+    private String trackingId;
     private Integer operatorId;
     private String location;
     private LocalDateTime eventDate;
     private String eventType;
 
-    public LogisticEventResponse(Integer id, Integer trackingId, Integer operatorId, String location, LocalDateTime eventDate, String eventType) {
+    public LogisticEventResponse(Integer id, String trackingId, Integer operatorId, String location, LocalDateTime eventDate, String eventType) {
         this.id = id;
         this.trackingId = trackingId;
         this.operatorId = operatorId;
@@ -24,7 +24,7 @@ public class LogisticEventResponse {
         return id;
     }
 
-    public Integer getTrackingId() {
+    public String getTrackingId() {
         return trackingId;
     }
 

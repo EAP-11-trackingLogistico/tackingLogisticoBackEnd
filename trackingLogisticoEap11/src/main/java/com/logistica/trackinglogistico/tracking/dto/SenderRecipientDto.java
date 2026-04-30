@@ -11,8 +11,8 @@ public class SenderRecipientDto {
     @NotBlank
     private String direccion;
 
-    @NotNull
-    private Long telefono;
+    @NotBlank
+    private String telefono;
 
     public String getNombre() {
         return nombre;
@@ -30,11 +30,11 @@ public class SenderRecipientDto {
         this.direccion = direccion;
     }
 
-    public Long getTelefono() {
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(Long telefono) {
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 }

@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 
 public class CreateLogisticEventRequest {
 
-    @NotNull
-    private Integer trackingId;
+    @NotBlank
+    private String trackingId;
 
     @NotNull
     private Integer operatorId;
@@ -22,11 +22,11 @@ public class CreateLogisticEventRequest {
     @NotBlank
     private String eventType;
 
-    public Integer getTrackingId() {
+    public String getTrackingId() {
         return trackingId;
     }
 
-    public void setTrackingId(Integer trackingId) {
+    public void setTrackingId(String trackingId) {
         this.trackingId = trackingId;
     }
 

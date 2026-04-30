@@ -16,6 +16,7 @@ import com.logistica.trackinglogistico.users.repository.PersonRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
@@ -44,7 +45,7 @@ public class ShipmentService {
         return shipmentRepository.findAll();
     }
 
-    public ShipmentResponse getShipmentByTrackingId(Integer trackingId) {
+    public ShipmentResponse getShipmentByTrackingId(String trackingId) {
         Shipment shipment = shipmentRepository.findByTrackingId(trackingId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró el envío con trackingId: " + trackingId));
 
@@ -54,7 +55,7 @@ public class ShipmentService {
    
 
     @Transactional
-    public ShipmentResponse updateStatus(Integer trackingId, StatusUpdateRequest request) {
+    public ShipmentResponse updateStatus(String trackingId, StatusUpdateRequest request) {
         Shipment shipment = shipmentRepository.findByTrackingId(trackingId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró el envío con trackingId: " + trackingId));
 
@@ -91,7 +92,8 @@ public ShipmentResponse registerShipment(RegisterShipmentRequest request) {
     Package packageEntity = new Package();
     packageEntity.setRemitente(sender);
     packageEntity.setDestinatario(recipient);
-    packageEntity.setPeso(request.getPackageData().getPeso());
+    packageEntity.setPeso(BigDecimal.valueOf(request.getPackageData().getPeso()));
+    packageEntity.setEstado("REGISTERED");
     packageEntity = packageRepository.save(packageEntity);
 
     Shipment shipment = new Shipment();
@@ -105,11 +107,11 @@ public ShipmentResponse registerShipment(RegisterShipmentRequest request) {
     return mapToResponse(savedShipment, "Envío registrado correctamente");
 }
 
-    private Integer generateUniqueTrackingId() {
+    private String generateUniqueTrackingId() {
         Random random = new Random();
-        int trackingId;
+        String trackingId;
         do {
-            trackingId = 100000 + random.nextInt(900000);
+            trackingId = String.valueOf(100000 + random.nextInt(900000));
         } while (shipmentRepository.existsByTrackingId(trackingId));
         return trackingId;
     }

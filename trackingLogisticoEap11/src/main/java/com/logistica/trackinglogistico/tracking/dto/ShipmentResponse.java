@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class ShipmentResponse {
 
     private Integer shipmentId;
-    private Integer trackingId;
+    private String trackingId;
     private Integer operatorId;
     private Integer packageId;
     private LocalDateTime createdAt;
@@ -16,7 +16,7 @@ public class ShipmentResponse {
 
     public ShipmentResponse(
             Integer shipmentId,
-            Integer trackingId,
+            String trackingId,
             Integer operatorId,
             Integer packageId,
             LocalDateTime createdAt,
@@ -38,11 +38,11 @@ public class ShipmentResponse {
         this.shipmentId = shipmentId;
     }
 
-    public Integer getTrackingId() {
+    public String getTrackingId() {
         return trackingId;
     }
 
-    public void setTrackingId(Integer trackingId) {
+    public void setTrackingId(String trackingId) {
         this.trackingId = trackingId;
     }
 

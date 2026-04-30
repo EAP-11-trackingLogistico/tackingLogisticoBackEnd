@@ -4,18 +4,18 @@ import java.time.LocalDateTime;
 
 public class TrackingResponse {
 
-    private Integer trackingId;
+    private String trackingId;
     private String currentStatus;
     private String lastLocation;
     private LocalDateTime lastEventDate;
 
-    public TrackingResponse(Integer trackingId, String lastLocation, LocalDateTime lastEventDate) {
+    public TrackingResponse(String trackingId, String lastLocation, LocalDateTime lastEventDate) {
         this.trackingId = trackingId;
         this.lastLocation = lastLocation;
         this.lastEventDate = lastEventDate;
     }
 
-    public Integer getTrackingId() {
+    public String getTrackingId() {
         return trackingId;
     }
 

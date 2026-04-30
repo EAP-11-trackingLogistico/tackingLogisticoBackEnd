@@ -39,7 +39,7 @@ public class ShipmentController {
     }
 
     @GetMapping("/{trackingId}")
-    public TrackingResponse getShipmentByTrackingId(@PathVariable Integer trackingId) {
+    public TrackingResponse getShipmentByTrackingId(@PathVariable String trackingId) {
         return logisticEventService.getTracking(trackingId);
     }
 
@@ -51,7 +51,7 @@ public class ShipmentController {
 
     @PatchMapping("/{trackingId}/status")
     public ShipmentResponse updateStatus(
-            @PathVariable Integer trackingId,
+            @PathVariable String trackingId,
             @Valid @RequestBody StatusUpdateRequest request
     ) {
         return shipmentService.updateStatus(trackingId, request);

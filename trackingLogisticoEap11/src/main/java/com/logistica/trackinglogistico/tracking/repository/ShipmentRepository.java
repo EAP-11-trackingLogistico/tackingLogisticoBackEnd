@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface ShipmentRepository extends JpaRepository<Shipment, Integer> {
-    Optional<Shipment> findByTrackingId(Integer trackingId);
-    boolean existsByTrackingId(Integer trackingId);
+    Optional<Shipment> findByTrackingId(String trackingId);
+    boolean existsByTrackingId(String trackingId);
 }

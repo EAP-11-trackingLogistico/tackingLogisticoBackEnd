@@ -2,7 +2,13 @@ package com.logistica.trackinglogistico.orders.model;
 
 import com.logistica.trackinglogistico.users.model.Person;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.math.BigDecimal;
+
+@Setter
+@Getter
 @Entity
 @Table(name = "paquete")
 public class Package {
@@ -21,40 +27,12 @@ public class Package {
     private Person destinatario;
 
     @Column(name = "peso", nullable = false)
-    private Double peso;
+    private BigDecimal peso;
+
+    @Column(name = "estado", nullable = false)
+    private String estado;
 
     public Package() {
     }
 
-    public Integer getIdPaquete() {
-        return idPaquete;
-    }
-
-    public void setIdPaquete(Integer idPaquete) {
-        this.idPaquete = idPaquete;
-    }
-
-    public Person getRemitente() {
-        return remitente;
-    }
-
-    public void setRemitente(Person remitente) {
-        this.remitente = remitente;
-    }
-
-    public Person getDestinatario() {
-        return destinatario;
-    }
-
-    public void setDestinatario(Person destinatario) {
-        this.destinatario = destinatario;
-    }
-
-    public Double getPeso() {
-        return peso;
-    }
-
-    public void setPeso(Double peso) {
-        this.peso = peso;
-    }
 }
