@@ -8,7 +8,6 @@ import com.logistica.trackinglogistico.tracking.dto.RegisterShipmentRequest;
 import com.logistica.trackinglogistico.tracking.dto.ShipmentResponse;
 import com.logistica.trackinglogistico.tracking.dto.StatusUpdateRequest;
 import com.logistica.trackinglogistico.tracking.model.Shipment;
-import com.logistica.trackinglogistico.tracking.model.ShipmentStatus;
 import com.logistica.trackinglogistico.tracking.repository.ShipmentRepository;
 import com.logistica.trackinglogistico.users.model.Operator;
 import com.logistica.trackinglogistico.users.model.Person;
@@ -59,14 +58,14 @@ public class ShipmentService {
         Shipment shipment = shipmentRepository.findByTrackingId(trackingId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró el envío con trackingId: " + trackingId));
 
-        ShipmentStatus newStatus;
+        
         try {
-            newStatus = ShipmentStatus.valueOf(request.getStatus().toUpperCase());
+            
         } catch (IllegalArgumentException ex) {
             throw new BadRequestException("Estado inválido. Usa: REGISTERED, IN_TRANSIT, DELIVERED o DELAYED");
         }
 
-        shipment.setStatus(newStatus);
+        
         Shipment updatedShipment = shipmentRepository.save(shipment);
 
         return mapToResponse(updatedShipment, "Estado actualizado correctamente");
@@ -99,7 +98,6 @@ public ShipmentResponse registerShipment(RegisterShipmentRequest request) {
     shipment.setTrackingId(generateUniqueTrackingId());
     shipment.setOperador(operator);
     shipment.setPaquete(packageEntity);
-    shipment.setStatus(ShipmentStatus.REGISTERED);
     shipment.setCreatedAt(LocalDateTime.now());
 
     Shipment savedShipment = shipmentRepository.save(shipment);
@@ -122,7 +120,6 @@ public ShipmentResponse registerShipment(RegisterShipmentRequest request) {
                 shipment.getTrackingId(),
                 shipment.getOperador().getIdOperador(),
                 shipment.getPaquete().getIdPaquete(),
-                shipment.getStatus().name(),
                 shipment.getCreatedAt(),
                 message
         );

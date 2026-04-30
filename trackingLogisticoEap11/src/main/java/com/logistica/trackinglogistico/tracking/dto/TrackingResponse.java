@@ -9,9 +9,8 @@ public class TrackingResponse {
     private String lastLocation;
     private LocalDateTime lastEventDate;
 
-    public TrackingResponse(Integer trackingId, String currentStatus, String lastLocation, LocalDateTime lastEventDate) {
+    public TrackingResponse(Integer trackingId, String lastLocation, LocalDateTime lastEventDate) {
         this.trackingId = trackingId;
-        this.currentStatus = currentStatus;
         this.lastLocation = lastLocation;
         this.lastEventDate = lastEventDate;
     }
