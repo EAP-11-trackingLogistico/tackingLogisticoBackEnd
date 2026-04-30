@@ -20,6 +20,9 @@ public class CreateLogisticEventRequest {
     private LocalDateTime eventDate;
 
     @NotBlank
+    private String nombre;
+
+    @NotBlank
     private String eventType;
 
     public String getTrackingId() {
@@ -60,5 +63,13 @@ public class CreateLogisticEventRequest {
 
     public void setEventType(String eventType) {
         this.eventType = eventType;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 }

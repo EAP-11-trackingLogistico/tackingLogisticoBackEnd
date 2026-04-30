@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@Table(name = "eventologistico")
+@Table(name = "evento_logistico")
 public class LogisticEvent {
 
     @Id
@@ -30,7 +30,7 @@ public class LogisticEvent {
 
     
     @Setter
-    @Column(name = "nombre", nullable = false)
+    @Column(name = "nombre")
     private String nombre;
 
     @Setter

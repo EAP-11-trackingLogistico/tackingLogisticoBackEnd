@@ -45,6 +45,7 @@ public class LogisticEventService {
         LogisticEvent event = new LogisticEvent();
         event.setShipment(shipment);
         event.setOperator(operator);
+        event.setNombre(request.getNombre());
         event.setLocation(request.getLocation());
         event.setEventDate(request.getEventDate());
         event.setEventType(eventType);
@@ -67,6 +68,8 @@ public class LogisticEventService {
         Shipment shipment = shipmentRepository.findByTrackingId(trackingId)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe envío con trackingId: " + trackingId));
 
+        String currentStatus = shipment.getPaquete().getEstado();
+
         LogisticEvent lastEvent = logisticEventRepository.findTopByShipmentOrderByEventDateDesc(shipment)
                 .orElse(null);
 
@@ -74,6 +77,7 @@ public class LogisticEventService {
 
         return new TrackingResponse(
                 shipment.getTrackingId(),
+                currentStatus,
                 lastLocation,
                 lastEvent != null ? lastEvent.getEventDate() : null
         );
