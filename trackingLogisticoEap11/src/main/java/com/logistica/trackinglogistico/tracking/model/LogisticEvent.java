@@ -23,8 +23,7 @@ public class LogisticEvent {
     @JoinColumn(name = "idoperador", nullable = false)
     private Operator operator;
 
-    @ManyToOne
-    @JoinColumn(name = "nombre", nullable = false)
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
     @Column(name = "ubicacion", nullable = false)
@@ -42,6 +41,14 @@ public class LogisticEvent {
 
     public Integer getId() {
         return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public Shipment getShipment() {
