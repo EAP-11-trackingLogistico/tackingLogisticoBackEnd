@@ -6,6 +6,10 @@ import com.logistica.trackinglogistico.tracking.dto.StatusUpdateRequest;
 import com.logistica.trackinglogistico.tracking.model.Shipment;
 import com.logistica.trackinglogistico.tracking.service.ShipmentService;
 import jakarta.validation.Valid;
+
+import com.logistica.trackinglogistico.tracking.dto.TrackingResponse;
+import com.logistica.trackinglogistico.tracking.service.LogisticEventService;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,9 +20,12 @@ import java.util.List;
 public class ShipmentController {
 
     private final ShipmentService shipmentService;
+    private final LogisticEventService logisticEventService;
+        
 
-    public ShipmentController(ShipmentService shipmentService) {
+    public ShipmentController(ShipmentService shipmentService, LogisticEventService logisticEventService) {
         this.shipmentService = shipmentService;
+        this.logisticEventService = logisticEventService;
     }
 
     @GetMapping("/ping")
@@ -32,8 +39,8 @@ public class ShipmentController {
     }
 
     @GetMapping("/{trackingId}")
-    public ShipmentResponse getShipmentByTrackingId(@PathVariable Integer trackingId) {
-        return shipmentService.getShipmentByTrackingId(trackingId);
+    public TrackingResponse getShipmentByTrackingId(@PathVariable Integer trackingId) {
+        return logisticEventService.getTracking(trackingId);
     }
 
     @PostMapping("/register")
@@ -49,4 +56,7 @@ public class ShipmentController {
     ) {
         return shipmentService.updateStatus(trackingId, request);
     }
+
+ 
+
 }
