@@ -31,3 +31,43 @@ jobs:
       - name: Run Tests
         run: mvn -B test
         working-directory: trackingLogisticoEap11
+
+  sonar:
+  needs: tests
+  name: SonarCloud analysis
+  runs-on: ubuntu-latest
+
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Cache SonarCloud packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
+
+    - name: Cache Maven packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: Analyze with SonarCloud
+      working-directory: trackingLogisticoEap11
+      run: >
+        ./mvnw -B verify sonar:sonar
+        -Dsonar.projectKey=EAP-11-trackingLogistico_tackingLogisticoBackEnd
+        -Dsonar.organization=eap-11-trackinglogistico
+        -Dsonar.host.url=https://sonarcloud.io
+        -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
