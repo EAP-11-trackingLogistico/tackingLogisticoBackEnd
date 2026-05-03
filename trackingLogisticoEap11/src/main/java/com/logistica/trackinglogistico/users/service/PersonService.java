@@ -1,5 +1,6 @@
 package com.logistica.trackinglogistico.users.service;
 
+import com.logistica.trackinglogistico.shared.exception.ResourceAlreadyExistsException;
 import com.logistica.trackinglogistico.shared.exception.ResourceNotFoundException;
 import com.logistica.trackinglogistico.users.dto.CreatePersonRequest;
 import com.logistica.trackinglogistico.users.model.Person;
@@ -27,6 +28,11 @@ public class PersonService {
     }
 
     public Person create(CreatePersonRequest request) {
+
+        if (personRepository.existsByTelefono(request.getTelefono())) {
+            throw new ResourceAlreadyExistsException("Persona con teléfono " + request.getTelefono() + " ya existe");
+        }
+
         Person person = new Person();
         person.setNombre(request.getNombre());
         person.setDireccion(request.getDireccion());
