@@ -1,7 +1,6 @@
 package com.logistica.trackinglogistico.users.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 public class CreatePersonRequest {
 
