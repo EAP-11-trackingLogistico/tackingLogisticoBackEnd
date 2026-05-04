@@ -20,7 +20,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 
 @Service
 public class ShipmentService {
@@ -112,10 +113,10 @@ public ShipmentResponse registerShipment(RegisterShipmentRequest request) {
 }
 
     private String generateUniqueTrackingId() {
-        Random random = new Random();
         String trackingId;
         do {
-            trackingId = String.valueOf(100000 + random.nextInt(900000));
+            int number = ThreadLocalRandom.current().nextInt(100000, 1000000);
+            trackingId = String.valueOf(number);
         } while (shipmentRepository.existsByTrackingId(trackingId));
         return trackingId;
     }

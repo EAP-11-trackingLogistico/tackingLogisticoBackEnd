@@ -29,7 +29,7 @@ import com.logistica.trackinglogistico.users.repository.OperatorRepository;
 import com.logistica.trackinglogistico.orders.model.Package;
 
 @ExtendWith(MockitoExtension.class)
-public class LogisticEventServiceTest {
+class LogisticEventServiceTest {
 
     @Mock
     private LogisticEventRepository logisticEventDao;

@@ -21,6 +21,7 @@ public class Person {
     private String telefono;
 
     public Person() {
+        // Constructor vacío requerido por JPA
     }
 
     public Integer getIdPersona() {

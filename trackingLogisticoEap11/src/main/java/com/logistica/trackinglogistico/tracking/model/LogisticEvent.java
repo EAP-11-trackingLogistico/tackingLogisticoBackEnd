@@ -47,6 +47,7 @@ public class LogisticEvent {
     private ShipmentStatus eventType;
 
     public LogisticEvent() {
+        // Constructor vacío requerido por JPA
     }
 
 }

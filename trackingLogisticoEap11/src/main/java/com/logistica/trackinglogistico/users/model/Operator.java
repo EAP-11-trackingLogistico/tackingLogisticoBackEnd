@@ -18,6 +18,7 @@ public class Operator {
     private String usuario;
 
     public Operator() {
+        // Constructor vacío requerido por JPA
     }
 
     public Integer getIdOperador() {

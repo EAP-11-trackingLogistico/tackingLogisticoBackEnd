@@ -22,7 +22,7 @@ import com.logistica.trackinglogistico.users.model.Operator;
 import com.logistica.trackinglogistico.users.repository.OperatorRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class OperatorServiceTest {
+class OperatorServiceTest {
 
     @Mock
     private OperatorRepository operatorDao;

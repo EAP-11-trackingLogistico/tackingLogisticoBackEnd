@@ -37,6 +37,7 @@ public class Shipment {
     private LocalDateTime createdAt;
 
     public Shipment() {
+        // Constructor vacío requerido por JPA
     }
 
 }

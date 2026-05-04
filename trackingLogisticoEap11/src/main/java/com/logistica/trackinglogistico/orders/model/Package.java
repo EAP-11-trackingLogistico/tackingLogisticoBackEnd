@@ -33,6 +33,7 @@ public class Package {
     private String estado;
 
     public Package() {
+        // Constructor vacío requerido por JPA
     }
 
 }
