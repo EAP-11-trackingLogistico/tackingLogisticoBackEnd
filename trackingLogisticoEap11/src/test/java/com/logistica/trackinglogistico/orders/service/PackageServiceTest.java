@@ -24,7 +24,7 @@ import com.logistica.trackinglogistico.users.model.Person;
 import com.logistica.trackinglogistico.users.repository.PersonRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class PackageServiceTest {
+class PackageServiceTest {
 
     @Mock
     private PackageRepository packageDao;

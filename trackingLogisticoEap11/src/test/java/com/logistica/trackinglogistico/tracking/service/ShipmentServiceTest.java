@@ -33,7 +33,7 @@ import com.logistica.trackinglogistico.users.repository.OperatorRepository;
 import com.logistica.trackinglogistico.users.repository.PersonRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class ShipmentServiceTest {
+class ShipmentServiceTest {
 
     @Mock
     private ShipmentRepository shipmentDao;
