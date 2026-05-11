@@ -17,9 +17,11 @@ import com.logistica.trackinglogistico.users.repository.PersonRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 
 @Service
 public class ShipmentService {
@@ -45,7 +47,7 @@ public class ShipmentService {
         return shipmentRepository.findAll();
     }
 
-    public ShipmentResponse getShipmentByTrackingId(Integer trackingId) {
+    public ShipmentResponse getShipmentByTrackingId(String trackingId) {
         Shipment shipment = shipmentRepository.findByTrackingId(trackingId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró el envío con trackingId: " + trackingId));
 
@@ -55,7 +57,7 @@ public class ShipmentService {
    
 
     @Transactional
-    public ShipmentResponse updateStatus(Integer trackingId, StatusUpdateRequest request) {
+    public ShipmentResponse updateStatus(String trackingId, StatusUpdateRequest request) {
         Shipment shipment = shipmentRepository.findByTrackingId(trackingId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró el envío con trackingId: " + trackingId));
 
@@ -63,10 +65,13 @@ public class ShipmentService {
         try {
             newStatus = ShipmentStatus.valueOf(request.getStatus().toUpperCase());
         } catch (IllegalArgumentException ex) {
-            throw new BadRequestException("Estado inválido. Usa: REGISTERED, IN_TRANSIT, DELIVERED o DELAYED");
+            throw new BadRequestException("Estado inválido. Usa: REGISTERED, IN_TRANSIT, AT_WAREHOUSE, OUT_FOR_DELIVERY, DELIVERED o DELAYED");
         }
 
-        shipment.setStatus(newStatus);
+        Package pkg = shipment.getPaquete();
+        pkg.setEstado(newStatus.name());
+        packageRepository.save(pkg);
+
         Shipment updatedShipment = shipmentRepository.save(shipment);
 
         return mapToResponse(updatedShipment, "Estado actualizado correctamente");
@@ -92,14 +97,14 @@ public ShipmentResponse registerShipment(RegisterShipmentRequest request) {
     Package packageEntity = new Package();
     packageEntity.setRemitente(sender);
     packageEntity.setDestinatario(recipient);
-    packageEntity.setPeso(request.getPackageData().getPeso());
+    packageEntity.setPeso(BigDecimal.valueOf(request.getPackageData().getPeso()));
+    packageEntity.setEstado("REGISTERED");
     packageEntity = packageRepository.save(packageEntity);
 
     Shipment shipment = new Shipment();
     shipment.setTrackingId(generateUniqueTrackingId());
     shipment.setOperador(operator);
     shipment.setPaquete(packageEntity);
-    shipment.setStatus(ShipmentStatus.REGISTERED);
     shipment.setCreatedAt(LocalDateTime.now());
 
     Shipment savedShipment = shipmentRepository.save(shipment);
@@ -107,11 +112,11 @@ public ShipmentResponse registerShipment(RegisterShipmentRequest request) {
     return mapToResponse(savedShipment, "Envío registrado correctamente");
 }
 
-    private Integer generateUniqueTrackingId() {
-        Random random = new Random();
-        int trackingId;
+    private String generateUniqueTrackingId() {
+        String trackingId;
         do {
-            trackingId = 100000 + random.nextInt(900000);
+            int number = ThreadLocalRandom.current().nextInt(100000, 1000000);
+            trackingId = String.valueOf(number);
         } while (shipmentRepository.existsByTrackingId(trackingId));
         return trackingId;
     }
@@ -122,7 +127,6 @@ public ShipmentResponse registerShipment(RegisterShipmentRequest request) {
                 shipment.getTrackingId(),
                 shipment.getOperador().getIdOperador(),
                 shipment.getPaquete().getIdPaquete(),
-                shipment.getStatus().name(),
                 shipment.getCreatedAt(),
                 message
         );

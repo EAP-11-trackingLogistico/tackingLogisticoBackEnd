@@ -18,9 +18,10 @@ public class Person {
     private String direccion;
 
     @Column(name = "telefono", nullable = false)
-    private Long telefono;
+    private String telefono;
 
     public Person() {
+        // Constructor vacío requerido por JPA
     }
 
     public Integer getIdPersona() {
@@ -47,11 +48,11 @@ public class Person {
         this.direccion = direccion;
     }
 
-    public Long getTelefono() {
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(Long telefono) {
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 }

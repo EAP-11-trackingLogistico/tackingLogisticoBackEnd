@@ -1,7 +1,13 @@
 package com.logistica.trackinglogistico.orders.dto;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.math.BigDecimal;
+
+@Setter
+@Getter
 public class CreatePackageRequest {
 
     @NotNull
@@ -10,30 +16,6 @@ public class CreatePackageRequest {
     @NotNull
     private Integer idDestinatario;
 
-    @NotNull
-    private Double peso;
+    private BigDecimal peso;
 
-    public Integer getIdRemitente() {
-        return idRemitente;
-    }
-
-    public void setIdRemitente(Integer idRemitente) {
-        this.idRemitente = idRemitente;
-    }
-
-    public Integer getIdDestinatario() {
-        return idDestinatario;
-    }
-
-    public void setIdDestinatario(Integer idDestinatario) {
-        this.idDestinatario = idDestinatario;
-    }
-
-    public Double getPeso() {
-        return peso;
-    }
-
-    public void setPeso(Double peso) {
-        this.peso = peso;
-    }
 }

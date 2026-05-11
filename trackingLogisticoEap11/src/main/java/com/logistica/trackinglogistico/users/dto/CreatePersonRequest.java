@@ -1,7 +1,6 @@
 package com.logistica.trackinglogistico.users.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 public class CreatePersonRequest {
 
@@ -11,8 +10,8 @@ public class CreatePersonRequest {
     @NotBlank
     private String direccion;
 
-    @NotNull
-    private Long telefono;
+    @NotBlank
+    private String telefono;
 
     public String getNombre() {
         return nombre;
@@ -30,11 +29,11 @@ public class CreatePersonRequest {
         this.direccion = direccion;
     }
 
-    public Long getTelefono() {
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(Long telefono) {
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 }

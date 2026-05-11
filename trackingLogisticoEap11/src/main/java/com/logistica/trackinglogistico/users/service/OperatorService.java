@@ -1,5 +1,6 @@
 package com.logistica.trackinglogistico.users.service;
 
+import com.logistica.trackinglogistico.shared.exception.ResourceAlreadyExistsException;
 import com.logistica.trackinglogistico.shared.exception.ResourceNotFoundException;
 import com.logistica.trackinglogistico.users.dto.CreateOperatorRequest;
 import com.logistica.trackinglogistico.users.model.Operator;
@@ -27,10 +28,18 @@ public class OperatorService {
     }
 
     public Operator create(CreateOperatorRequest request) {
-        Operator operator = new Operator();
-        operator.setNombre(request.getNombre());
-        operator.setUsuario(request.getUsuario());
 
-        return operatorRepository.save(operator);
+    if (operatorRepository.existsByUsuario(request.getUsuario())) {
+        throw new ResourceAlreadyExistsException(
+            "El usuario ya existe: " + request.getUsuario()
+        );
     }
+
+    Operator operator = new Operator();
+    operator.setNombre(request.getNombre());
+    operator.setUsuario(request.getUsuario());
+
+    return operatorRepository.save(operator);
+}
+
 }
