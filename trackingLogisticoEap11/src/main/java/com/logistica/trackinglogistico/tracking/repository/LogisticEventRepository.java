@@ -11,5 +11,7 @@ public interface LogisticEventRepository extends JpaRepository<LogisticEvent, In
 
     List<LogisticEvent> findByShipmentOrderByEventDateDesc(Shipment shipment);
 
+    List<LogisticEvent> findByShipmentOrderByEventDateAsc(Shipment shipment);
+
     Optional<LogisticEvent> findTopByShipmentOrderByEventDateDesc(Shipment shipment);
 }
