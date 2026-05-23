@@ -18,6 +18,7 @@ import com.logistica.trackinglogistico.shared.exception.BadRequestException;
 import com.logistica.trackinglogistico.shared.exception.ResourceNotFoundException;
 import com.logistica.trackinglogistico.tracking.dto.CreateLogisticEventRequest;
 import com.logistica.trackinglogistico.tracking.dto.LogisticEventResponse;
+import com.logistica.trackinglogistico.tracking.dto.MovementHistoryResponse;
 import com.logistica.trackinglogistico.tracking.dto.TrackingResponse;
 import com.logistica.trackinglogistico.tracking.model.LogisticEvent;
 import com.logistica.trackinglogistico.tracking.model.Shipment;
@@ -27,6 +28,9 @@ import com.logistica.trackinglogistico.tracking.repository.ShipmentRepository;
 import com.logistica.trackinglogistico.users.model.Operator;
 import com.logistica.trackinglogistico.users.repository.OperatorRepository;
 import com.logistica.trackinglogistico.orders.model.Package;
+
+import java.util.Collections;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 class LogisticEventServiceTest {
@@ -153,5 +157,73 @@ class LogisticEventServiceTest {
 
         assertThrows(ResourceNotFoundException.class,
             () -> logisticEventService.getTracking("TRK-999"));
+    }
+
+    @Test
+    void getMovementHistoryTest() {
+        LogisticEvent event1 = new LogisticEvent();
+        event1.setNombre("Paquete registrado");
+        event1.setLocation("Bogotá");
+        event1.setEventDate(LocalDateTime.now());
+        event1.setEventType(ShipmentStatus.REGISTERED);
+        event1.setOperator(operator);
+
+        LogisticEvent event2 = new LogisticEvent();
+        event2.setNombre("En tránsito");
+        event2.setLocation("Medellín");
+        event2.setEventDate(LocalDateTime.now().plusHours(2));
+        event2.setEventType(ShipmentStatus.IN_TRANSIT);
+        event2.setOperator(operator);
+
+        List<LogisticEvent> events = List.of(event1, event2);
+
+        when(shipmentDao.findByTrackingId("TRK-001")).thenReturn(Optional.of(shipment));
+        when(logisticEventDao.findByShipmentOrderByEventDateAsc(shipment)).thenReturn(events);
+
+        MovementHistoryResponse result = logisticEventService.getMovementHistory("TRK-001");
+
+        assertNotNull(result);
+        assertEquals("TRK-001", result.getTrackingId());
+        assertEquals(2, result.getTotalEvents());
+        assertEquals("Historial obtenido exitosamente", result.getMessage());
+        assertEquals(2, result.getEvents().size());
+        assertEquals("Bogotá", result.getEvents().get(0).getLocation());
+        assertEquals("REGISTERED", result.getEvents().get(0).getEventType());
+        assertEquals("Medellín", result.getEvents().get(1).getLocation());
+        assertEquals("IN_TRANSIT", result.getEvents().get(1).getEventType());
+    }
+
+    @Test
+    void getMovementHistoryNoEventsTest() {
+        when(shipmentDao.findByTrackingId("TRK-001")).thenReturn(Optional.of(shipment));
+        when(logisticEventDao.findByShipmentOrderByEventDateAsc(shipment)).thenReturn(Collections.emptyList());
+
+        MovementHistoryResponse result = logisticEventService.getMovementHistory("TRK-001");
+
+        assertNotNull(result);
+        assertEquals("TRK-001", result.getTrackingId());
+        assertEquals(0, result.getTotalEvents());
+        assertEquals("No hay eventos registrados para este envío", result.getMessage());
+        assertTrue(result.getEvents().isEmpty());
+    }
+
+    @Test
+    void getMovementHistoryNotFoundTest() {
+        when(shipmentDao.findByTrackingId("TRK-999")).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+            () -> logisticEventService.getMovementHistory("TRK-999"));
+    }
+
+    @Test
+    void getMovementHistoryBlankTrackingTest() {
+        assertThrows(BadRequestException.class,
+            () -> logisticEventService.getMovementHistory(null));
+
+        assertThrows(BadRequestException.class,
+            () -> logisticEventService.getMovementHistory(""));
+
+        assertThrows(BadRequestException.class,
+            () -> logisticEventService.getMovementHistory("   "));
     }
 }

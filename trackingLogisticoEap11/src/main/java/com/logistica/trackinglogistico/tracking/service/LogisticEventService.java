@@ -4,6 +4,8 @@ import com.logistica.trackinglogistico.shared.exception.BadRequestException;
 import com.logistica.trackinglogistico.shared.exception.ResourceNotFoundException;
 import com.logistica.trackinglogistico.tracking.dto.CreateLogisticEventRequest;
 import com.logistica.trackinglogistico.tracking.dto.LogisticEventResponse;
+import com.logistica.trackinglogistico.tracking.dto.MovementEventItem;
+import com.logistica.trackinglogistico.tracking.dto.MovementHistoryResponse;
 import com.logistica.trackinglogistico.tracking.dto.TrackingResponse;
 import com.logistica.trackinglogistico.tracking.model.LogisticEvent;
 import com.logistica.trackinglogistico.tracking.model.Shipment;
@@ -13,8 +15,13 @@ import com.logistica.trackinglogistico.tracking.repository.ShipmentRepository;
 import com.logistica.trackinglogistico.users.model.Operator;
 import com.logistica.trackinglogistico.users.repository.OperatorRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+
+@Slf4j
 @Service
 public class LogisticEventService {
 
@@ -80,6 +87,54 @@ public class LogisticEventService {
                 currentStatus,
                 lastLocation,
                 lastEvent != null ? lastEvent.getEventDate() : null
+        );
+    }
+
+    public MovementHistoryResponse getMovementHistory(String trackingId) {
+        if (trackingId == null || trackingId.isBlank()) {
+            throw new BadRequestException("El número de seguimiento no puede estar vacío");
+        }
+
+        Shipment shipment = shipmentRepository.findByTrackingId(trackingId)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe envío con trackingId: " + trackingId));
+
+        String currentStatus = shipment.getPaquete().getEstado();
+
+        List<LogisticEvent> events = logisticEventRepository.findByShipmentOrderByEventDateAsc(shipment);
+
+        List<MovementEventItem> eventItems = Collections.emptyList();
+        String message;
+
+        if (events.isEmpty()) {
+            message = "No hay eventos registrados para este envío";
+            log.info("Historial de movimientos consultado para trackingId: {} — sin eventos registrados", trackingId);
+        } else {
+            eventItems = events.stream()
+                    .map(this::mapToMovementEventItem)
+                    .toList();
+            message = "Historial obtenido exitosamente";
+            log.info("Historial de movimientos consultado para trackingId: {} — {} eventos encontrados", trackingId, events.size());
+        }
+
+        return new MovementHistoryResponse(
+                shipment.getTrackingId(),
+                currentStatus,
+                eventItems.size(),
+                message,
+                eventItems
+        );
+    }
+
+    private MovementEventItem mapToMovementEventItem(LogisticEvent event) {
+        String operatorName = event.getOperator() != null ? event.getOperator().getNombre() : "Desconocido";
+
+        return new MovementEventItem(
+                event.getId(),
+                event.getNombre(),
+                event.getEventType().name(),
+                event.getLocation(),
+                event.getEventDate(),
+                operatorName
         );
     }
 

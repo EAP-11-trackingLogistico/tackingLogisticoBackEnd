@@ -1,14 +1,14 @@
 package com.logistica.trackinglogistico.tracking.controller;
 
+import com.logistica.trackinglogistico.tracking.dto.MovementHistoryResponse;
 import com.logistica.trackinglogistico.tracking.dto.RegisterShipmentRequest;
 import com.logistica.trackinglogistico.tracking.dto.ShipmentResponse;
 import com.logistica.trackinglogistico.tracking.dto.StatusUpdateRequest;
+import com.logistica.trackinglogistico.tracking.dto.TrackingResponse;
 import com.logistica.trackinglogistico.tracking.model.Shipment;
+import com.logistica.trackinglogistico.tracking.service.LogisticEventService;
 import com.logistica.trackinglogistico.tracking.service.ShipmentService;
 import jakarta.validation.Valid;
-
-import com.logistica.trackinglogistico.tracking.dto.TrackingResponse;
-import com.logistica.trackinglogistico.tracking.service.LogisticEventService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +41,11 @@ public class ShipmentController {
     @GetMapping("/{trackingId}")
     public TrackingResponse getShipmentByTrackingId(@PathVariable String trackingId) {
         return logisticEventService.getTracking(trackingId);
+    }
+
+    @GetMapping("/{trackingId}/history")
+    public MovementHistoryResponse getMovementHistory(@PathVariable String trackingId) {
+        return logisticEventService.getMovementHistory(trackingId);
     }
 
     @PostMapping("/register")
