@@ -39,7 +39,6 @@ class LogisticEventControllerIntegrationTest {
                 1, "123456", 1, "Bogotá",
                 LocalDateTime.of(2026, 5, 23, 10, 30), "REGISTERED"
         );
-
         when(logisticEventService.createEvent(any(CreateLogisticEventRequest.class)))
                 .thenReturn(response);
 
@@ -65,11 +64,7 @@ class LogisticEventControllerIntegrationTest {
 
     @Test
     void createEventWithMissingFieldsShouldReturn400() throws Exception {
-        String body = """
-                {
-                    "trackingId": "123456"
-                }
-                """;
+        String body = "{\"trackingId\": \"123456\"}";
 
         mockMvc.perform(post("/api/logistic-events")
                         .contentType(APPLICATION_JSON)

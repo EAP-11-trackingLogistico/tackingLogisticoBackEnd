@@ -27,9 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ReportControllerIntegrationTest {
 
     private MockMvc mockMvc;
-
     private ReportService reportService;
-
     private static final LocalDateTime START = LocalDateTime.of(2026, 5, 1, 0, 0, 0);
     private static final LocalDateTime END = LocalDateTime.of(2026, 5, 31, 23, 59, 59);
 
@@ -48,11 +46,9 @@ class ReportControllerIntegrationTest {
                 new TransitTimeReportResponse.TransitTimeReportItem(
                         1, "111111", START.plusDays(1), START.plusDays(3), 48.0
                 );
-
         TransitTimeReportResponse response = new TransitTimeReportResponse(
                 START, END, 1, 48.0, List.of(item)
         );
-
         when(reportService.getTransitTimeReport(any(), any())).thenReturn(response);
 
         mockMvc.perform(get("/api/reports/transit-times")
@@ -70,7 +66,6 @@ class ReportControllerIntegrationTest {
         TransitTimeReportResponse response = new TransitTimeReportResponse(
                 START, END, 0, 0.0, Collections.emptyList()
         );
-
         when(reportService.getTransitTimeReport(any(), any())).thenReturn(response);
 
         mockMvc.perform(get("/api/reports/transit-times")
@@ -122,11 +117,9 @@ class ReportControllerIntegrationTest {
                 1, "111111", "DELAYED", "Bodega Central",
                 START.plusDays(5), "Juan"
         );
-
         DelayReportResponse response = new DelayReportResponse(
                 START, END, 1, List.of(item)
         );
-
         when(reportService.getDelayReport(any(), any())).thenReturn(response);
 
         mockMvc.perform(get("/api/reports/delays")
@@ -143,7 +136,6 @@ class ReportControllerIntegrationTest {
         DelayReportResponse response = new DelayReportResponse(
                 START, END, 0, Collections.emptyList()
         );
-
         when(reportService.getDelayReport(any(), any())).thenReturn(response);
 
         mockMvc.perform(get("/api/reports/delays")
@@ -168,11 +160,9 @@ class ReportControllerIntegrationTest {
                 new ShipmentVolumeReportResponse.ShipmentVolumeItem(
                         LocalDate.of(2026, 5, 10), 5
                 );
-
         ShipmentVolumeReportResponse response = new ShipmentVolumeReportResponse(
                 START, END, 5, List.of(item)
         );
-
         when(reportService.getShipmentVolumeReport(any(), any())).thenReturn(response);
 
         mockMvc.perform(get("/api/reports/shipment-volume")
@@ -189,7 +179,6 @@ class ReportControllerIntegrationTest {
         ShipmentVolumeReportResponse response = new ShipmentVolumeReportResponse(
                 START, END, 0, Collections.emptyList()
         );
-
         when(reportService.getShipmentVolumeReport(any(), any())).thenReturn(response);
 
         mockMvc.perform(get("/api/reports/shipment-volume")
