@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -44,7 +43,7 @@ public class ShipmentController {
                 .map(s -> EntityModel.of(s,
                         linkTo(methodOn(ShipmentController.class)
                                 .getShipmentByTrackingId(s.getTrackingId())).withSelfRel()))
-                .collect(Collectors.toList());
+                .toList();
 
         return CollectionModel.of(shipments,
                 linkTo(methodOn(ShipmentController.class).getAllShipments()).withSelfRel());

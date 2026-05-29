@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -31,7 +30,7 @@ public class PersonController {
                 .map(p -> EntityModel.of(p,
                         linkTo(methodOn(PersonController.class)
                                 .getById(p.getIdPersona())).withSelfRel()))
-                .collect(Collectors.toList());
+                .toList();
 
         return CollectionModel.of(persons,
                 linkTo(methodOn(PersonController.class).getAll()).withSelfRel());
