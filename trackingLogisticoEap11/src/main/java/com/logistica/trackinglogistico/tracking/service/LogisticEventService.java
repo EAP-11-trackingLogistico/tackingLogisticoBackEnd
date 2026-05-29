@@ -47,7 +47,12 @@ public class LogisticEventService {
         Operator operator = operatorRepository.findById(request.getOperatorId())
                 .orElseThrow(() -> new ResourceNotFoundException("No existe operador con id: " + request.getOperatorId()));
 
-        ShipmentStatus eventType = parseStatus(request.getEventType());
+        ShipmentStatus eventType;
+        try {
+            eventType = ShipmentStatus.fromString(request.getEventType());
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequestException(ex.getMessage());
+        }
 
         LogisticEvent event = new LogisticEvent();
         event.setShipment(shipment);
@@ -56,8 +61,6 @@ public class LogisticEventService {
         event.setLocation(request.getLocation());
         event.setEventDate(request.getEventDate());
         event.setEventType(eventType);
-
-        shipmentRepository.save(shipment);
 
         LogisticEvent savedEvent = logisticEventRepository.save(event);
 
@@ -98,27 +101,22 @@ public class LogisticEventService {
         Shipment shipment = shipmentRepository.findByTrackingId(trackingId)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe envío con trackingId: " + trackingId));
 
-        String currentStatus = shipment.getPaquete().getEstado();
-
         List<LogisticEvent> events = logisticEventRepository.findByShipmentOrderByEventDateAsc(shipment);
 
-        List<MovementEventItem> eventItems = Collections.emptyList();
-        String message;
+        List<MovementEventItem> eventItems = events.isEmpty()
+                ? Collections.emptyList()
+                : events.stream().map(this::mapToMovementEventItem).toList();
 
-        if (events.isEmpty()) {
-            message = "No hay eventos registrados para este envío";
-            log.info("Historial de movimientos consultado para trackingId: {} — sin eventos registrados", trackingId);
-        } else {
-            eventItems = events.stream()
-                    .map(this::mapToMovementEventItem)
-                    .toList();
-            message = "Historial obtenido exitosamente";
-            log.info("Historial de movimientos consultado para trackingId: {} — {} eventos encontrados", trackingId, events.size());
-        }
+        String message = events.isEmpty()
+                ? "No hay eventos registrados para este envío"
+                : "Historial obtenido exitosamente";
+
+        log.info("Historial de movimientos consultado para trackingId: {} — {} eventos",
+                trackingId, events.size());
 
         return new MovementHistoryResponse(
                 shipment.getTrackingId(),
-                currentStatus,
+                shipment.getPaquete().getEstado(),
                 eventItems.size(),
                 message,
                 eventItems
@@ -136,13 +134,5 @@ public class LogisticEventService {
                 event.getEventDate(),
                 operatorName
         );
-    }
-
-    private ShipmentStatus parseStatus(String status) {
-        try {
-            return ShipmentStatus.valueOf(status.toUpperCase());
-        } catch (IllegalArgumentException ex) {
-            throw new BadRequestException("Estado inválido. Usa: REGISTERED, IN_TRANSIT, AT_WAREHOUSE, OUT_FOR_DELIVERY, DELIVERED o DELAYED");
-        }
     }
 }

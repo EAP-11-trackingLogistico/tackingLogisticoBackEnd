@@ -63,9 +63,9 @@ public class ShipmentService {
 
         ShipmentStatus newStatus;
         try {
-            newStatus = ShipmentStatus.valueOf(request.getStatus().toUpperCase());
+            newStatus = ShipmentStatus.fromString(request.getStatus());
         } catch (IllegalArgumentException ex) {
-            throw new BadRequestException("Estado inválido. Usa: REGISTERED, IN_TRANSIT, AT_WAREHOUSE, OUT_FOR_DELIVERY, DELIVERED o DELAYED");
+            throw new BadRequestException(ex.getMessage());
         }
 
         Package pkg = shipment.getPaquete();
