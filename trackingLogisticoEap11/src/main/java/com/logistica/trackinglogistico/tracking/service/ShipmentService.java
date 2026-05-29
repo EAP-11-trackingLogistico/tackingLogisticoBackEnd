@@ -2,7 +2,6 @@ package com.logistica.trackinglogistico.tracking.service;
 
 import com.logistica.trackinglogistico.orders.model.Package;
 import com.logistica.trackinglogistico.orders.repository.PackageRepository;
-import com.logistica.trackinglogistico.shared.exception.BadRequestException;
 import com.logistica.trackinglogistico.shared.exception.ResourceNotFoundException;
 import com.logistica.trackinglogistico.tracking.dto.RegisterShipmentRequest;
 import com.logistica.trackinglogistico.tracking.dto.ShipmentResponse;
@@ -61,12 +60,7 @@ public class ShipmentService {
         Shipment shipment = shipmentRepository.findByTrackingId(trackingId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró el envío con trackingId: " + trackingId));
 
-        ShipmentStatus newStatus;
-        try {
-            newStatus = ShipmentStatus.fromString(request.getStatus());
-        } catch (IllegalArgumentException ex) {
-            throw new BadRequestException(ex.getMessage());
-        }
+        ShipmentStatus newStatus = ShipmentStatus.fromString(request.getStatus());
 
         Package pkg = shipment.getPaquete();
         pkg.setEstado(newStatus.name());

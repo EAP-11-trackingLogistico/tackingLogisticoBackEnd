@@ -47,12 +47,7 @@ public class LogisticEventService {
         Operator operator = operatorRepository.findById(request.getOperatorId())
                 .orElseThrow(() -> new ResourceNotFoundException("No existe operador con id: " + request.getOperatorId()));
 
-        ShipmentStatus eventType;
-        try {
-            eventType = ShipmentStatus.fromString(request.getEventType());
-        } catch (IllegalArgumentException ex) {
-            throw new BadRequestException(ex.getMessage());
-        }
+        ShipmentStatus eventType = ShipmentStatus.fromString(request.getEventType());
 
         LogisticEvent event = new LogisticEvent();
         event.setShipment(shipment);

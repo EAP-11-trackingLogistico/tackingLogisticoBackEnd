@@ -121,7 +121,7 @@ class LogisticEventServiceTest {
         when(shipmentDao.findByTrackingId("TRK-001")).thenReturn(Optional.of(shipment));
         when(operatorDao.findById(1)).thenReturn(Optional.of(operator));
 
-        assertThrows(BadRequestException.class,
+        assertThrows(IllegalArgumentException.class,
             () -> logisticEventService.createEvent(dtoEvent));
     }
 

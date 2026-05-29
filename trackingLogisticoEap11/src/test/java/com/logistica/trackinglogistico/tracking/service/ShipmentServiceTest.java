@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.logistica.trackinglogistico.orders.model.Package;
 import com.logistica.trackinglogistico.orders.repository.PackageRepository;
-import com.logistica.trackinglogistico.shared.exception.BadRequestException;
 import com.logistica.trackinglogistico.shared.exception.ResourceNotFoundException;
 import com.logistica.trackinglogistico.tracking.dto.RegisterShipmentRequest;
 import com.logistica.trackinglogistico.tracking.dto.PackageDataDto;
@@ -150,7 +149,7 @@ class ShipmentServiceTest {
 
         when(shipmentDao.findByTrackingId("TRK-001")).thenReturn(Optional.of(shipment));
 
-        assertThrows(BadRequestException.class,
+        assertThrows(IllegalArgumentException.class,
             () -> shipmentService.updateStatus("TRK-001", dtoStatus));
     }
 
