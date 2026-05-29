@@ -25,6 +25,8 @@ import java.util.List;
 @Service
 public class LogisticEventService {
 
+    private static final String TRACKING_NOT_FOUND_MSG = "No existe envío con trackingId: ";
+
     private final LogisticEventRepository logisticEventRepository;
     private final ShipmentRepository shipmentRepository;
     private final OperatorRepository operatorRepository;
@@ -42,7 +44,7 @@ public class LogisticEventService {
     @Transactional
     public LogisticEventResponse createEvent(CreateLogisticEventRequest request) {
         Shipment shipment = shipmentRepository.findByTrackingId(request.getTrackingId())
-                .orElseThrow(() -> new ResourceNotFoundException("No existe envío con trackingId: " + request.getTrackingId()));
+                .orElseThrow(() -> new ResourceNotFoundException(TRACKING_NOT_FOUND_MSG + request.getTrackingId()));
 
         Operator operator = operatorRepository.findById(request.getOperatorId())
                 .orElseThrow(() -> new ResourceNotFoundException("No existe operador con id: " + request.getOperatorId()));
@@ -71,7 +73,7 @@ public class LogisticEventService {
 
     public TrackingResponse getTracking(String trackingId) {
         Shipment shipment = shipmentRepository.findByTrackingId(trackingId)
-                .orElseThrow(() -> new ResourceNotFoundException("No existe envío con trackingId: " + trackingId));
+                .orElseThrow(() -> new ResourceNotFoundException(TRACKING_NOT_FOUND_MSG + trackingId));
 
         String currentStatus = shipment.getPaquete().getEstado();
 
@@ -94,7 +96,7 @@ public class LogisticEventService {
         }
 
         Shipment shipment = shipmentRepository.findByTrackingId(trackingId)
-                .orElseThrow(() -> new ResourceNotFoundException("No existe envío con trackingId: " + trackingId));
+                .orElseThrow(() -> new ResourceNotFoundException(TRACKING_NOT_FOUND_MSG + trackingId));
 
         List<LogisticEvent> events = logisticEventRepository.findByShipmentOrderByEventDateAsc(shipment);
 
