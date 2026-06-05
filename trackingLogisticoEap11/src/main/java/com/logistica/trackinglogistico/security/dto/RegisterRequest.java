@@ -1,38 +1,19 @@
-package com.logistica.trackinglogistico.users.model;
+package com.logistica.trackinglogistico.security.dto;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
-@Entity
-@Table(name = "operador")
-public class Operator {
+public class RegisterRequest {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idoperador")
-    private Integer idOperador;
-
-    @Column(name = "nombre", nullable = false)
+    @NotBlank
     private String nombre;
 
-    @Column(name = "usuario", nullable = false)
+    @NotBlank
     private String usuario;
 
-    @Column(name = "contrasena")
+    @NotBlank
     private String contrasena;
 
-    @Column(name = "rol")
     private String rol;
-
-    public Operator() {
-    }
-
-    public Integer getIdOperador() {
-        return idOperador;
-    }
-
-    public void setIdOperador(Integer idOperador) {
-        this.idOperador = idOperador;
-    }
 
     public String getNombre() {
         return nombre;

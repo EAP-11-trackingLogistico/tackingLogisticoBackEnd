@@ -12,6 +12,10 @@ import jakarta.validation.Valid;
 
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,15 +42,19 @@ public class ShipmentController {
     }
 
     @GetMapping
-    public CollectionModel<EntityModel<Shipment>> getAllShipments() {
-        List<EntityModel<Shipment>> shipments = shipmentService.getAllShipments().stream()
+    public PagedModel<EntityModel<Shipment>> getAllShipments(
+            @PageableDefault(size = 20) Pageable pageable) {
+        Page<Shipment> page = shipmentService.getAllShipments(pageable);
+
+        List<EntityModel<Shipment>> shipments = page.getContent().stream()
                 .map(s -> EntityModel.of(s,
                         linkTo(methodOn(ShipmentController.class)
                                 .getShipmentByTrackingId(s.getTrackingId())).withSelfRel()))
                 .toList();
 
-        return CollectionModel.of(shipments,
-                linkTo(methodOn(ShipmentController.class).getAllShipments()).withSelfRel());
+        return PagedModel.of(shipments, new PagedModel.PageMetadata(
+                        page.getSize(), page.getNumber(), page.getTotalElements(), page.getTotalPages()),
+                linkTo(methodOn(ShipmentController.class).getAllShipments(pageable)).withSelfRel());
     }
 
     @GetMapping("/{trackingId}")

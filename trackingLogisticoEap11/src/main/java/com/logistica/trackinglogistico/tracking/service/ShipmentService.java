@@ -14,6 +14,8 @@ import com.logistica.trackinglogistico.users.model.Person;
 import com.logistica.trackinglogistico.users.repository.OperatorRepository;
 import com.logistica.trackinglogistico.users.repository.PersonRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -44,6 +46,10 @@ public class ShipmentService {
 
     public List<Shipment> getAllShipments() {
         return shipmentRepository.findAll();
+    }
+
+    public Page<Shipment> getAllShipments(Pageable pageable) {
+        return shipmentRepository.findAll(pageable);
     }
 
     public ShipmentResponse getShipmentByTrackingId(String trackingId) {

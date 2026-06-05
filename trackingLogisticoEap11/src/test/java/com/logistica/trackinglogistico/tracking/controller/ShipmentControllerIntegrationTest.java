@@ -12,6 +12,10 @@ import com.logistica.trackinglogistico.tracking.service.LogisticEventService;
 import com.logistica.trackinglogistico.tracking.service.ShipmentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -42,6 +46,7 @@ class ShipmentControllerIntegrationTest {
         logisticEventService = mock(LogisticEventService.class);
         ShipmentController controller = new ShipmentController(shipmentService, logisticEventService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
     }
@@ -124,7 +129,8 @@ class ShipmentControllerIntegrationTest {
     void getAllShipmentsShouldReturn200() throws Exception {
         Shipment shipment = new Shipment();
         shipment.setTrackingId("111111");
-        when(shipmentService.getAllShipments()).thenReturn(List.of(shipment));
+        Page<Shipment> page = new PageImpl<>(List.of(shipment));
+        when(shipmentService.getAllShipments(any(Pageable.class))).thenReturn(page);
 
         mockMvc.perform(get("/api/shipments"))
                 .andExpect(status().isOk());
@@ -132,7 +138,8 @@ class ShipmentControllerIntegrationTest {
 
     @Test
     void getAllShipmentsEmptyShouldReturn200() throws Exception {
-        when(shipmentService.getAllShipments()).thenReturn(Collections.emptyList());
+        Page<Shipment> page = new PageImpl<>(Collections.emptyList());
+        when(shipmentService.getAllShipments(any(Pageable.class))).thenReturn(page);
 
         mockMvc.perform(get("/api/shipments"))
                 .andExpect(status().isOk());
